@@ -1,0 +1,12 @@
+<svg width="64" height="64" viewBox="0 0 64 64" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="64" height="64" rx="14" fill="#121110"/>
+  <defs>
+    <linearGradient id="g" x1="14" y1="20" x2="50" y2="46" gradientUnits="userSpaceOnUse">
+      <stop stop-color="#ff6a1a"/>
+      <stop offset="1" stop-color="#ffb784"/>
+    </linearGradient>
+  </defs>
+  <text x="32" y="34" text-anchor="middle" dominant-baseline="central"
+    font-family="Georgia, 'Times New Roman', serif" font-size="30" font-weight="500"
+    letter-spacing="-1.5" fill="url(#g)">AC</text>
+</svg>
