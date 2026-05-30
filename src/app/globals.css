@@ -2,26 +2,191 @@
 @tailwind components;
 @tailwind utilities;
 
-:root {
-  --background: #ffffff;
-  --foreground: #171717;
+/* Light is the default; an inline script sets data-theme before paint. */
+:root,
+:root[data-theme="light"] {
+  --bg: #f6f4ef;
+  --bg-elev: #ffffff;
+  --ink: #17130f;
+  --ink-dim: #5f574d;
+  --ink-faint: #9c9488;
+  --line: rgba(23, 19, 15, 0.1);
+  --line-strong: rgba(23, 19, 15, 0.2);
+  --accent: #e85d00;
+  --accent-2: #ff8a3d;
+  --on-accent: #ffffff;
+  --star: 23, 19, 15;
+  --vignette: 0.06;
 }
 
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
-  }
+:root[data-theme="dark"] {
+  --bg: #0a0908;
+  --bg-elev: #141210;
+  --ink: #ece7df;
+  --ink-dim: #9a938a;
+  --ink-faint: #5b554c;
+  --line: rgba(236, 231, 223, 0.09);
+  --line-strong: rgba(236, 231, 223, 0.16);
+  --accent: #ff6a1a;
+  --accent-2: #ffb784;
+  --on-accent: #000000;
+  --star: 236, 231, 223;
+  --vignette: 0.05;
+}
+
+html {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+* {
+  -webkit-font-smoothing: antialiased;
+  text-rendering: optimizeLegibility;
+}
+
+html {
+  scroll-behavior: smooth;
 }
 
 body {
-  color: var(--foreground);
-  background: var(--background);
-  font-family: Arial, Helvetica, sans-serif;
+  background: var(--bg);
+  color: var(--ink);
+  font-family: var(--font-sans), system-ui, sans-serif;
+  overflow-x: hidden;
+}
+
+/* Subtle film grain + vignette for an editorial, premium feel */
+body::after {
+  content: "";
+  position: fixed;
+  inset: 0;
+  pointer-events: none;
+  z-index: 1;
+  background: radial-gradient(
+    120% 90% at 50% -10%,
+    rgba(255, 106, 26, var(--vignette)),
+    transparent 60%
+  );
+}
+
+body {
+  transition: background-color 0.5s ease, color 0.5s ease;
+}
+
+::selection {
+  background: rgba(255, 106, 26, 0.28);
+  color: #fff;
+}
+
+/* Thin custom scrollbar */
+::-webkit-scrollbar {
+  width: 8px;
+}
+::-webkit-scrollbar-track {
+  background: var(--bg);
+}
+::-webkit-scrollbar-thumb {
+  background: var(--line-strong);
+  border-radius: 99px;
 }
 
 @layer utilities {
-  .text-balance {
-    text-wrap: balance;
+  .font-serif {
+    font-family: var(--font-serif), Georgia, serif;
+  }
+  .font-mono {
+    font-family: var(--font-mono), ui-monospace, monospace;
+  }
+  .text-ink {
+    color: var(--ink);
+  }
+  .text-dim {
+    color: var(--ink-dim);
+  }
+  .text-faint {
+    color: var(--ink-faint);
+  }
+  .text-accent {
+    color: var(--accent);
+  }
+  .border-line {
+    border-color: var(--line);
+  }
+  .bg-elev {
+    background: var(--bg-elev);
+  }
+  /* Mono eyebrow label */
+  .eyebrow {
+    font-family: var(--font-mono), monospace;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    color: var(--ink-faint);
+  }
+  .accent-grad {
+    background: linear-gradient(120deg, var(--accent), var(--accent-2));
+    -webkit-background-clip: text;
+    background-clip: text;
+    color: transparent;
+    /* The clip box follows the line height; tall italic ascenders/descenders
+       fall outside it and get cut off. Pad the box and pull it back with a
+       negative margin so glyphs paint fully without shifting layout. */
+    display: inline-block;
+    padding-block: 0.16em;
+    margin-block: -0.16em;
+  }
+  .hairline {
+    height: 1px;
+    background: linear-gradient(
+      90deg,
+      transparent,
+      var(--line-strong),
+      transparent
+    );
+  }
+}
+
+/* Animated underline link */
+.link-underline {
+  position: relative;
+}
+.link-underline::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  bottom: -2px;
+  width: 100%;
+  height: 1px;
+  background: var(--accent);
+  transform: scaleX(0);
+  transform-origin: right;
+  transition: transform 0.4s cubic-bezier(0.16, 1, 0.3, 1);
+}
+.link-underline:hover::after {
+  transform: scaleX(1);
+  transform-origin: left;
+}
+
+@keyframes slow-spin {
+  to {
+    transform: rotate(360deg);
+  }
+}
+@keyframes pulse-dot {
+  0%,
+  100% {
+    opacity: 0.4;
+    transform: scale(1);
+  }
+  50% {
+    opacity: 1;
+    transform: scale(1.6);
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  * {
+    animation-duration: 0.001ms !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
   }
 }
